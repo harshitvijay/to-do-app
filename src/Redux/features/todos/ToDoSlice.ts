@@ -24,11 +24,31 @@ export const fetchTodos = createAsyncThunk("todo/fetchTodos", () => {
     .get("https://jsonplaceholder.typicode.com/todos?_start=0&_limit=10")
     .then((response: any) => response.data);
 });
+export const addToDoItem = (
+  state: InitialState,
+  action: PayloadAction<Todo>
+) => {
+  state.todos.push(action.payload);
+};
+export const deleteToDoItem = (
+  state: InitialState,
+  action: PayloadAction<number>
+) => {
+  let newTodos = state.todos.filter((todo) => todo.id !== action.payload);
+  return {
+    loading: false,
+    todos: newTodos,
+    error: "",
+  };
+};
 
 const todoSlice = createSlice({
   name: "todo",
   initialState,
-  reducers: {},
+  reducers: {
+    addItem: addToDoItem,
+    deleteItem: deleteToDoItem,
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchTodos.pending, (state) => {
       state.loading = true;
@@ -48,5 +68,5 @@ const todoSlice = createSlice({
     });
   },
 });
-
+export const { addItem, deleteItem } = todoSlice.actions;
 export default todoSlice.reducer;

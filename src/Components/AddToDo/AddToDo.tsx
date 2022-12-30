@@ -1,8 +1,17 @@
-import React, { FC } from "react";
+import React, { FC, useState, ChangeEvent } from "react";
 import { Button, Container, Form } from "react-bootstrap";
+import { addItem } from "../../Redux/features/todos/ToDoSlice";
+import { useAppDispatch, useAppSelector } from "../../Redux/store/hooks";
 import style from "./AddToDoStyles";
 
 const AddToDo: FC = () => {
+  const todo = useAppSelector((state) => state.todo);
+  const dispatch = useAppDispatch();
+  const [task, setTask] = useState<string>("");
+
+  const onHandleChange = (e: ChangeEvent<any>) => {
+    setTask(e.target.value);
+  };
   return (
     <Container
       className="shadow bg-light border border-light"
@@ -16,10 +25,24 @@ const AddToDo: FC = () => {
           size="lg"
           type="text"
           placeholder="Add Task"
-          onChange={() => {}}
+          onChange={(e) => onHandleChange(e)}
+          value={task}
         />
-        <Button className="ms-2" onClick={() => {}}>
-          Create
+        <Button
+          className="ms-2"
+          onClick={() => {
+            dispatch(
+              addItem({
+                userId: 1,
+                id: todo.todos.length + 1,
+                completed: false,
+                title: task,
+              })
+            );
+            setTask("");
+          }}
+        >
+          Createe
         </Button>
       </div>
     </Container>

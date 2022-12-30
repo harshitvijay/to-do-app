@@ -1,10 +1,12 @@
 import React, { FC } from "react";
 import Table from "react-bootstrap/Table";
 import { Button } from "react-bootstrap";
-import { useAppSelector } from "../../Redux/store/hooks";
+import { deleteItem } from "../../Redux/features/todos/ToDoSlice";
+import { useAppSelector, useAppDispatch } from "../../Redux/store/hooks";
 
 const DisplayToDo: FC = () => {
   const todo = useAppSelector((state) => state.todo);
+  const dispatch = useAppDispatch();
   return (
     <div>
       <div className="text-center m-4">
@@ -20,16 +22,15 @@ const DisplayToDo: FC = () => {
           </tr>
         </thead>
         <tbody>
-          {todo.todos.map((item) => (
+          {todo.todos.map((item, index) => (
             <tr key={item.id}>
-              <td>{item.id}</td>
+              <td>{index + 1}</td>
               <td>{item.title}</td>
               <td>
                 <div className="form-check">
                   <input
                     className="form-check-input position-static"
                     type="checkbox"
-                    // value={"option"}
                     defaultChecked={item.completed}
                     onSelect={() => {}}
                     aria-label="..."
@@ -37,7 +38,12 @@ const DisplayToDo: FC = () => {
                 </div>
               </td>
               <td>
-                <Button variant="danger">Delete</Button>
+                <Button
+                  variant="danger"
+                  onClick={() => dispatch(deleteItem(item.id))}
+                >
+                  Delete
+                </Button>
               </td>
             </tr>
           ))}
